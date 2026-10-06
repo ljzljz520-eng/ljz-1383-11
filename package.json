@@ -1,0 +1,18 @@
+{
+  "name": "personal-archive",
+  "version": "1.0.0",
+  "description": "个人站经历档案：不精确时间、阶段/能力筛选、冻结发布、合并迁移与乐观并发",
+  "main": "server/app.js",
+  "scripts": {
+    "start": "node server/app.js",
+    "seed": "node server/seed.js",
+    "test:time": "node test/time.test.js",
+    "test:acceptance": "node test/acceptance.js",
+    "reset": "rm -f data/archive.db* && node server/seed.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "better-sqlite3": "^12.11.1",
+    "express": "^5.2.1"
+  }
+}

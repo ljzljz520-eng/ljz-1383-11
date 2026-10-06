@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>经历档案管理</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/archive.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div id="toast-container"></div>
+<header class="glass scrolled">
+    <div class="container"><nav>
+        <a href="index.html" class="logo">灵墨创意 · 管理</a>
+        <ul class="nav-links">
+            <li><a href="archive.html" target="_blank">查看档案 ↗</a></li>
+            <li><a href="#" id="logout-link">退出登录</a></li>
+        </ul>
+    </nav></div>
+</header>
+<main class="container admin-wrap">
+    <div id="login-view" style="display:none;">
+        <div class="login-card glass">
+            <h2 style="margin-bottom:1.5rem;">站主登录</h2>
+            <input id="login-pw" type="password" placeholder="管理口令（默认 admin123）">
+            <input id="login-device" type="text" placeholder="设备名，如 手机/办公电脑">
+            <button class="btn btn-primary" style="width:100%;" id="login-btn">登录</button>
+            <p class="pub-note" style="margin-top:1rem;">多设备同时登录时，并发编辑同一经历会收到冲突提示。</p>
+        </div>
+    </div>
+
+    <div id="admin-view" style="display:none;">
+        <div class="tabs-admin">
+            <button class="btn btn-sm active" data-tab="experiences">经历（求学/实习/项目）</button>
+            <button class="btn btn-sm" data-tab="works">作品</button>
+            <button class="btn btn-sm" data-tab="publish">发布与版本</button>
+            <button class="btn btn-sm" data-tab="sessions">在线设备</button>
+        </div>
+
+        <div id="tab-experiences">
+            <div class="admin-toolbar">
+                <button class="btn btn-primary" id="new-exp-btn">+ 新建经历</button>
+                <button class="btn" id="merge-btn">合并选中重复经历</button>
+                <span class="pub-note" id="exp-count"></span>
+            </div>
+            <table class="admin-table">
+                <thead><tr><th></th><th>标题</th><th>阶段</th><th>时间（原始精度）</th><th>状态</th><th>贡献</th><th>关联作品</th><th>版本</th><th>操作</th></tr></thead>
+                <tbody id="exp-tbody"></tbody>
+            </table>
+        </div>
+
+        <div id="tab-works" style="display:none;">
+            <div class="admin-toolbar">
+                <button class="btn btn-primary" id="new-work-btn">+ 新建作品</button>
+                <span class="pub-note">一个作品可关联多段经历；退役后发布的历史版本仍可追溯。</span>
+            </div>
+            <table class="admin-table">
+                <thead><tr><th>标题</th><th>标识</th><th>关联经历</th><th>退役</th><th>版本</th><th>操作</th></tr></thead>
+                <tbody id="work-tbody"></tbody>
+            </table>
+        </div>
+
+        <div id="tab-publish" style="display:none;">
+            <div class="admin-toolbar">
+                <input id="pub-note-input" placeholder="本次发布说明（可选）" style="flex:1;padding:.7rem 1rem;border-radius:10px;background:rgba(255,255,255,.05);border:1px solid var(--glass-border);color:var(--text);">
+                <button class="btn btn-primary" id="publish-btn">生成冻结发布版本</button>
+            </div>
+            <p class="pub-note" style="margin-bottom:1.5rem;">发布把当前已批准的经历与贡献冻结为新版本；访客在翻页期间遇到上线只会收到提示，手动切换后列表/搜索/详情一起更新。</p>
+            <table class="admin-table">
+                <thead><tr><th>版本</th><th>发布时间</th><th>说明</th><th>状态</th></tr></thead>
+                <tbody id="pub-tbody"></tbody>
+            </table>
+        </div>
+
+        <div id="tab-sessions" style="display:none;">
+            <h3 style="margin-bottom:1rem;">当前登录设备</h3>
+            <table class="admin-table">
+                <thead><tr><th>设备</th><th>UA</th><th>登录时间</th></tr></thead>
+                <tbody id="session-tbody"></tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+<!-- 经历编辑弹窗 -->
+<div class="modal-mask" id="exp-modal">
+  <div class="modal">
+    <h2 id="exp-modal-title">编辑经历</h2>
+    <div id="conflict-box"></div>
+    <input type="hidden" id="exp-id">
+    <input type="hidden" id="exp-version">
+    <div class="field-row">
+      <div class="field"><label>阶段</label>
+        <select id="exp-type">
+          <option value="education">求学</option>
+          <option value="internship">实习</option>
+          <option value="project">项目经历</option>
+        </select>
+      </div>
+      <div class="field"><label>发布状态</label>
+        <select id="exp-status">
+          <option value="approved">已批准（公开）</option>
+          <option value="pending">待审（仅管理端）</option>
+          <option value="hidden">隐藏</option>
+        </select>
+      </div>
+    </div>
+    <div class="field"><label>标题</label><input id="exp-title"></div>
+    <div class="field"><label>机构/单位</label><input id="exp-org"></div>
+    <div class="field"><label>概述</label><textarea id="exp-summary"></textarea></div>
+
+    <div class="field-row">
+      <div class="field"><label>开始时间精度</label>
+        <select id="start-precision">
+          <option value="year">仅年份</option><option value="month">年 + 月</option><option value="day">完整日期</option>
+        </select>
+      </div>
+      <div class="field" data-part="start"><label>开始时间（不会补默认日期）</label>
+        <div style="display:flex;gap:.5rem;">
+          <input type="number" id="start-year" placeholder="年" min="1900" max="2200" style="flex:1;">
+          <input type="number" id="start-month" placeholder="月" min="1" max="12" style="flex:1;display:none;">
+          <input type="number" id="start-day" placeholder="日" min="1" max="31" style="flex:1;display:none;">
+        </div>
+        <div class="precision-hint" id="start-hint">只有年份：排序按年中处理，绝不伪造成 1 月 1 日</div>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>结束</label>
+        <select id="end-precision">
+          <option value="ongoing">进行中（至今）</option>
+          <option value="year">仅年份</option><option value="month">年 + 月</option><option value="day">完整日期</option>
+        </select>
+      </div>
+      <div class="field" data-part="end"><label>结束时间</label>
+        <div style="display:flex;gap:.5rem;">
+          <input type="number" id="end-year" placeholder="年" style="flex:1;display:none;">
+          <input type="number" id="end-month" placeholder="月" min="1" max="12" style="flex:1;display:none;">
+          <input type="number" id="end-day" placeholder="日" min="1" max="31" style="flex:1;display:none;">
+        </div>
+      </div>
+    </div>
+
+    <div class="field"><label>能力标签（逗号分隔）</label><input id="exp-skills" placeholder="如：前端, 交互设计, 用户研究"></div>
+
+    <div class="field contrib-editor">
+      <label>个人贡献（勾选=批准，公开页仅显示已批准项）</label>
+      <div id="contrib-rows"></div>
+      <button type="button" class="btn btn-sm" id="add-contrib">+ 添加贡献</button>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn" id="exp-cancel">取消</button>
+      <button class="btn btn-primary" id="exp-save">保存（不发布）</button>
+    </div>
+  </div>
+</div>
+
+<!-- 作品编辑弹窗 -->
+<div class="modal-mask" id="work-modal">
+  <div class="modal">
+    <h2 id="work-modal-title">编辑作品</h2>
+    <input type="hidden" id="work-id"><input type="hidden" id="work-version">
+    <div class="field"><label>标题</label><input id="work-title"></div>
+    <div class="field"><label>URL 标识（slug，留空自动生成）</label><input id="work-slug" placeholder="改动后旧链接自动重定向"></div>
+    <div class="field"><label>概述</label><textarea id="work-summary"></textarea></div>
+    <div class="field"><label>外链</label><input id="work-link"></div>
+    <div class="field"><label><input type="checkbox" id="work-retired"> 项目已退役（保留历史发布）</label></div>
+    <div class="field">
+      <label>关联经历（多选，按住 Ctrl/Cmd）</label>
+      <select id="work-exps" multiple size="6"></select>
+      <div class="precision-hint">作品不直接持有日期，时间轴来自所关联的各段经历</div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" id="work-cancel">取消</button>
+      <button class="btn btn-primary" id="work-save">保存</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/main.js"></script>
+<script src="js/archive/admin.js"></script>
+</body>
+</html>

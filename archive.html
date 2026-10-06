@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>经历档案 | 灵墨创意</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/archive.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div id="toast-container"></div>
+<header class="glass scrolled">
+    <div class="container"><nav>
+        <a href="index.html" class="logo">灵墨创意</a>
+        <ul class="nav-links">
+            <li><a href="index.html">首页</a></li>
+            <li><a href="hobbies.html">兴趣爱好</a></li>
+            <li><a href="archive.html" style="color: var(--primary);">经历档案</a></li>
+            <li><a href="contact.html">联系我</a></li>
+        </ul>
+    </nav></div>
+</header>
+
+<main class="container archive-wrap">
+    <div class="archive-header">
+        <h1>经历档案</h1>
+        <p style="color: var(--text-muted); margin-top: .8rem;">求学 · 实习 · 作品——按阶段与能力筛选我的成长轨迹</p>
+    </div>
+
+    <div id="version-banner"></div>
+
+    <div class="search-box">
+        <input id="search-input" type="search" placeholder="搜索经历、作品、能力、贡献…（回车搜索）">
+    </div>
+    <div id="search-panel" style="display:none;"></div>
+
+    <div id="list-panel">
+        <div class="filter-bar">
+            <div class="filter-group" id="stage-filters">
+                <span class="chip active" data-stage="">全部阶段</span>
+            </div>
+            <select class="filter-select" id="skill-select"><option value="">全部能力</option></select>
+            <select class="filter-select" id="year-select"><option value="">全部年份</option></select>
+            <select class="filter-select" id="kind-select">
+                <option value="experiences">按经历</option>
+                <option value="works">按作品</option>
+            </select>
+        </div>
+        <div id="grid" class="archive-grid"></div>
+        <div id="empty" class="empty" style="display:none;">当前筛选下没有已发布的经历。</div>
+        <div class="pager"><button class="btn btn-primary" id="load-more" style="display:none;">加载更多</button></div>
+    </div>
+</main>
+
+<footer style="margin-top: 6rem;">
+    <div class="container"><div class="footer-bottom">
+        <p>&copy; 2026 林墨的个人主页 · 经历档案发布版本 <span id="pub-id"></span></p>
+    </div></div>
+</footer>
+<script src="js/main.js"></script>
+<script src="js/archive/public.js"></script>
+</body>
+</html>
