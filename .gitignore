@@ -1,5 +1,8 @@
 # solo-manager GitHub sync ignores
 node_modules/
+data/*.db
+data/*.db-shm
+data/*.db-wal
 vendor/
 dist/
 build/

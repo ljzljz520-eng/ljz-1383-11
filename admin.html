@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>经历档案管理 | 林墨</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/archive.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div id="toast-container"></div>
+<header class="glass scrolled">
+  <div class="container"><nav>
+    <a href="index.html" class="logo">灵墨创意 · 管理</a>
+    <ul class="nav-links">
+      <li><a href="experiences.html">公开档案</a></li>
+      <li><a href="admin.html" class="active-nav">管理页</a></li>
+    </ul>
+  </nav></div>
+</header>
+
+<main class="admin-shell">
+  <aside class="admin-sidebar glass">
+    <button class="active" data-panel="experiences">求学 / 实习 / 作品</button>
+    <button data-panel="works">作品与多经历关系</button>
+    <button data-panel="skills">能力词典</button>
+    <button data-panel="publish">草稿与冻结发布</button>
+  </aside>
+
+  <section>
+    <section id="login-panel" class="glass editor" style="padding:1.5rem;">
+      <label class="wide">
+        管理口令
+        <input id="admin-token" type="password" placeholder="开发环境默认 owner-dev-token">
+      </label>
+      <button id="login-btn" class="btn btn-primary" type="button">进入管理页</button>
+      <p class="wide card-summary">口令保存在本机 localStorage，仅用于请求 Authorization: Bearer。</p>
+    </section>
+
+    <div id="admin-content" hidden>
+      <section id="panel-experiences" class="admin-panel active">
+        <div class="list-toolbar">
+          <h1>经历编辑</h1>
+          <button id="new-experience" class="btn btn-primary btn-small" type="button">新建经历</button>
+        </div>
+        <div id="conflict-banner" hidden></div>
+        <div class="glass" style="padding:1rem; overflow-x:auto;">
+          <table class="admin-table" id="experience-table"><tbody></tbody></table>
+        </div>
+        <form id="experience-form" class="editor glass" style="padding:1.5rem;"></form>
+      </section>
+
+      <section id="panel-works" class="admin-panel">
+        <h1>作品档案</h1>
+        <p class="card-summary">作品通过“多段经历关系”连接求学、实习和作品阶段；合并经历时关系会迁移，旧链接由经历别名承接。</p>
+        <form id="work-form" class="editor glass" style="padding:1.5rem;"></form>
+        <div class="glass" style="padding:1rem; overflow-x:auto; margin-top:1.5rem;">
+          <table class="admin-table" id="work-table"><tbody></tbody></table>
+        </div>
+      </section>
+
+      <section id="panel-skills" class="admin-panel">
+        <h1>能力词典</h1>
+        <form id="skill-form" class="editor glass" style="padding:1.5rem;">
+          <label>名称<input name="name" required placeholder="例如：信息架构"></label>
+          <label>Slug<input name="slug" placeholder="information-architecture"></label>
+          <label class="wide">说明<input name="description"></label>
+          <button class="btn btn-primary" type="submit">新增能力</button>
+        </form>
+        <div class="glass" style="padding:1rem; overflow-x:auto; margin-top:1.5rem;">
+          <table class="admin-table" id="skill-table"><tbody></tbody></table>
+        </div>
+      </section>
+
+      <section id="panel-publish" class="admin-panel">
+        <h1>实时草稿表 vs 冻结发布视图</h1>
+        <div id="diff-box" class="glass" style="padding:1.5rem; margin-top:1rem;">读取发布差异中…</div>
+        <div style="display:flex; gap:1rem; flex-wrap:wrap; margin:1rem 0;">
+          <button id="publish-current" class="btn btn-primary" type="button">生成并发布当前版本</button>
+          <button id="publish-running" class="btn btn-outline" type="button">模拟“正在运行”发布</button>
+          <button id="finalize-running" class="btn btn-outline" type="button">完成正在运行的发布</button>
+          <button id="cancel-running" class="btn btn-outline" type="button">取消正在运行的发布</button>
+        </div>
+        <div id="release-list"></div>
+      </section>
+    </div>
+  </section>
+</main>
+
+<script src="js/main.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

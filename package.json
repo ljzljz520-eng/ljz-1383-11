@@ -1,0 +1,15 @@
+{
+  "name": "personal-experience-archive",
+  "version": "1.0.0",
+  "description": "个人站经历档案：草稿/发布分离、关系数据库与稳定时间筛选",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node server/index.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.10.0"
+  }
+}
